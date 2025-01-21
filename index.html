@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Egg Prices Over Time</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh; 
+      overflow: hidden; 
+    }
+
+    header {
+      flex: 0 0 auto; 
+      text-align: center;
+    }
+
+    header img {
+      max-width: 100%;
+      height: auto;
+      max-height: 20vh; 
+    }
+
+    main {
+      flex: 1 1 auto; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    canvas {
+      max-width: 100%;
+      max-height: 70%; 
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 1.5em;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <img src="banner.jpg" alt="Banner">
+  </header>
+
+  <main>
+    <h1>Egg Prices Over Time</h1>
+    <canvas id="priceChart"></canvas>
+  </main>
+
+  <script>
+    fetch('data.json')
+      .then(response => response.json())
+      .then(data => {
+        const datasets = [];
+        let labels = [];
+
+        for (const [product, entries] of Object.entries(data)) {
+          const sortedEntries = entries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+          const dates = sortedEntries.map(entry => entry.date);
+          const prices = sortedEntries.map(entry => entry.price);
+
+          if (labels.length === 0) {
+            labels = dates;
+          }
+
+          datasets.push({
+            label: product.replace(/-/g, ' '),
+            data: prices,
+            borderColor: getRandomColor(),
+            fill: false,
+            tension: 0.2
+          });
+        }
+
+        function getRandomColor() {
+          const r = Math.floor(Math.random() * 256);
+          const g = Math.floor(Math.random() * 256);
+          const b = Math.floor(Math.random() * 256);
+          return `rgb(255, 0, 0)`;
+        }
+
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: datasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false, 
+            plugins: {
+              legend: {
+                position: 'top'
+              },
+              title: {
+                display: true,
+                text: 'Egg Prices Over Time'
+              }
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Date'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Price (USD)'
+                },
+                beginAtZero: false
+              }
+            }
+          }
+        });
+      })
+      .catch(error => console.error('Error loading JSON:', error));
+  </script>
+</body>
+</html>
