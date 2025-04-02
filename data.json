@@ -259,6 +259,10 @@
         {
             "price": 4.54,
             "date": "2025-04-01"
+        },
+        {
+            "price": 4.54,
+            "date": "2025-04-02"
         }
     ],
     "Vital-Farms-Pasture-Raised-Grade-A-Large-Brown-Eggs-12-Count/115864065": [
@@ -521,6 +525,10 @@
         {
             "price": 5.62,
             "date": "2025-04-01"
+        },
+        {
+            "price": 5.62,
+            "date": "2025-04-02"
         }
     ]
 }
